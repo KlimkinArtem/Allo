@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScence.coordinateSpace.bounds)
         window?.windowScene = windowScence
         window?.rootViewController = AuthorizationVC()
+        
         window?.makeKeyAndVisible()
     }
 

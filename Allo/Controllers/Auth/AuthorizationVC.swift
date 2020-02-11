@@ -27,9 +27,11 @@ class AuthorizationVC: UIViewController {
         configureSignInButton()
         configureSignUpButton()
         
+        
         usernameTF.delegate = self
         passwordTF.delegate = self
     }
+
     
     @objc func signInTapped(){
         if usernameTF.text!.isEmpty || passwordTF.text!.isEmpty{
@@ -39,11 +41,21 @@ class AuthorizationVC: UIViewController {
             self.present(alert, animated: true)
             return
         }
+        
+        let result = usernameTF.text! + passwordTF.text!
+        if result.contains(".") {
+            let alert = AuthErrorAlertVC(title: "Что-то пошло не так 😢", message: "Поля не должны содержать точек")
+//            alert.modalPresentationStyle = .overFullScreen
+//            alert.modalTransitionStyle = .crossDissolve
+            self.present(alert, animated: true)
+            return
+        }
+        
         signIn(username: usernameTF.text!, password: passwordTF.text!)
     }
     
     func signIn(username: String, password: String){
-        NetworkManager.shared.signIn(username: username, password: password) { (data, err) in
+        NetworkManager.shared.signIn(username: username, password: password) { (user, err) in
             if let _ = err{
                 print(err!)
                 DispatchQueue.main.async {
@@ -55,18 +67,18 @@ class AuthorizationVC: UIViewController {
                 return
             }
             
-            if data!._id != "null"{
-
+            if user!._id != "null"{
+                ID = user?._id
+                FIRSTNAME = user?.firstnamedb
+                LASTNAME = user?.lastnamedb
+                USERNAME = user?.usenamedb
+                PASSWORD = user?.passworddb
                 DispatchQueue.main.async {
-                    let homeVC = HomeVC(id: data!._id,
-                                        firstName: data!.firstnamedb,
-                                        lastName: data!.lastnamedb,
-                                        username: data!.usenamedb,
-                                        password: data!.passworddb)
+                    let tb = TabBarController()
                     
-                    homeVC.modalPresentationStyle = .overFullScreen
-                    homeVC.modalTransitionStyle = .crossDissolve
-                    self.present(homeVC, animated: true)
+                    tb.modalPresentationStyle = .overFullScreen
+                    tb.modalTransitionStyle = .crossDissolve
+                    self.present(tb, animated: true)
                 }
             }else{
                 DispatchQueue.main.async {

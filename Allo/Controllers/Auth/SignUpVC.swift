@@ -37,7 +37,65 @@ class SignUpVC: UIViewController {
     
     
     @objc func signUpTapped(){
-        print(#function)
+        
+        
+        
+        if firstNameTF.text!.isEmpty || lastNameTF.text!.isEmpty || usernameTF.text!.isEmpty || passwordTF.text!.isEmpty{
+            let alert = AuthErrorAlertVC(title: "Что-то пошло не так 😢", message: "Заполните все необходиме поля")
+            alert.modalPresentationStyle = .overFullScreen
+            alert.modalTransitionStyle = .crossDissolve
+            self.present(alert, animated: true)
+            return
+        }
+        let result = firstNameTF.text! + lastNameTF.text! + usernameTF.text! + passwordTF.text!
+        if result.contains(".") {
+            let alert = AuthErrorAlertVC(title: "Что-то пошло не так 😢", message: "Поля не должны содержать точек")
+            alert.modalPresentationStyle = .overFullScreen
+            alert.modalTransitionStyle = .crossDissolve
+            self.present(alert, animated: true)
+            return
+        }
+        
+        signUp(firstName: firstNameTF.text!, lastName: lastNameTF.text!, username: usernameTF.text!, password: passwordTF.text!)
+    }
+    
+    
+    func signUp(firstName: String, lastName: String, username: String, password: String){
+        NetworkManager.shared.signUp(firstName: firstName, lastName: lastName, username: username, password: password) { (user, err) in
+            if let _ = err{
+                print(err!)
+                DispatchQueue.main.async {
+                    let alert = AuthErrorAlertVC(title: "Что-то пошло не так 😢", message: err!)
+                    alert.modalPresentationStyle = .overFullScreen
+                    alert.modalTransitionStyle = .crossDissolve
+                    self.present(alert, animated: true)
+                }
+                return
+            }
+            
+            if user!._id != "null"{
+                ID = user?._id
+                FIRSTNAME = user?.firstnamedb
+                LASTNAME = user?.lastnamedb
+                USERNAME = user?.usenamedb
+                PASSWORD = user?.passworddb
+                
+                DispatchQueue.main.async {
+                    let tb = TabBarController()
+                    
+                    tb.modalPresentationStyle = .overFullScreen
+                    tb.modalTransitionStyle = .crossDissolve
+                    self.present(tb, animated: true)
+                }
+            }else{
+                DispatchQueue.main.async {
+                    let alert = AuthErrorAlertVC(title: "Что-то пошло не так 😢", message: "Пользователь с таким логином уже существует. Попробуйте ввести другой логин")
+                    alert.modalPresentationStyle = .overFullScreen
+                    alert.modalTransitionStyle = .crossDissolve
+                    self.present(alert, animated: true)
+                }
+            }
+        }
     }
 }
 

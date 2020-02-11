@@ -87,7 +87,7 @@ class AuthErrorAlertVC: UIViewController {
             messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             messageLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            messageLabel.heightAnchor.constraint(equalToConstant: 50)
+            messageLabel.heightAnchor.constraint(equalToConstant: 100)
         ])
         
     }

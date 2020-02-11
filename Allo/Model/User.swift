@@ -1,5 +1,5 @@
 //
-//  CorrectData.swift
+//  User.swift
 //  Allo
 //
 //  Created by Артем Климкин on 10/02/2020.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CorrectData: Codable{
+struct User: Codable{
     let _id: String
     let firstnamedb: String
     let lastnamedb: String
